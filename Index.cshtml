@@ -1,0 +1,66 @@
+﻿@model IEnumerable<WaterQualityMonitoring.Models.WaterReport>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+@{
+    ViewData["Title"] = "Water pollution reports";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Water pollution reports</h2>
+
+    <div class="row mb-4">
+        <div class="col">
+            <a asp-action="Create" class="btn btn-success">Add a new report</a>
+            <a asp-action="Search" class="btn btn-info">Search the reports</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>the site</th>
+                    <th>Type of pollution</th>
+                    <th>Possible source</th>
+                    <th>the date</th>
+                    <th>the condition</th>
+                    <th>details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Location</td>
+                        <td>
+                            <span class="badge bg-warning">@item.PollutionType</span>
+                        </td>
+                        <td>@item.SourceType</td>
+                        <td>@item.ReportDate.ToString("yyyy/MM/dd")</td>
+                        <td>
+                            @if (item.Status == "Pending")
+                            {
+                                <span class="badge bg-secondary">Under review</span>
+                            }
+                            else if (item.Status == "Confirmed")
+                            {
+                                <span class="badge bg-danger">certain</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">incorrect</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.ReportID" class="btn btn-sm btn-primary">an offer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

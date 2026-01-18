@@ -1,0 +1,58 @@
+﻿@model WaterQualityMonitoring.Models.WaterReport
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Report details";
+
+}
+<div class="container mt-4">
+    <h2 class="mb-4">Report details</h2>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">@Model.Location</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Type of pollution:</strong> @Model.PollutionType</p>
+                    <p><strong>Possible source:</strong> @Model.SourceType</p>
+                    <p>
+                        <strong>the condition:</strong>
+                        @if (Model.Status == "Confirmed")
+                        {
+                            <span class="badge bg-success">certain</span>
+                        }
+                        else if (Model.Status == "Pending")
+                        {
+                            <span class="badge bg-warning">Under review</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">uncertain</span>
+                        }
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>the date:</strong> @Model.ReportDate.ToString("yyyy/MM/dd")</p>
+                    <p><strong>user:</strong> @(Model.User?.Username ?? "unknown")</p>
+                    <p><strong>Governorate:</strong> @(Model.User?.Governorate ?? "unknown")</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="mt-3">
+                    <strong>Description:</strong>
+                    <p class="mt-2">@Model.Description</p>
+                </div>
+            }
+
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Return to the menu</a>
+            </div>
+        </div>
+    </div>
+</div>

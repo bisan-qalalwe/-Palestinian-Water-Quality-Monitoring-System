@@ -1,0 +1,124 @@
+﻿@model IEnumerable<WaterQualityMonitoring.Models.WaterReport>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+
+@{
+    ViewData["Title"] = "Search in reports";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Search in reports</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="Search" method="get" class="row g-3">
+                <div class="col-md-6">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" name="location" id="location"
+                           value="@ViewBag.Location" placeholder="Enter location...">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="pollutionType" class="form-label">Type of pollution</label>
+                    <select class="form-control" name="pollutionType" id="pollutionType">
+                        <option value="">All types</option>
+                        <option value="chemical pollution"
+                                selected='@(ViewBag.PollutionType == "chemical pollution")'>
+                            Chemical pollution
+                        </option>
+                        <option value="bacteria"
+                                selected='@(ViewBag.PollutionType == "bacteria")'>
+                            Bacteria
+                        </option>
+                        <option value="high salinity"
+                                selected='@(ViewBag.PollutionType == "high salinity")'>
+                            High salinity
+                        </option>
+                        <option value="heavy metals"
+                                selected='@(ViewBag.PollutionType == "heavy metals")'>
+                            Heavy metals
+                        </option>
+                        <option value="High turbidity"
+                                selected='@(ViewBag.PollutionType == "High turbidity")'>
+                            High turbidity
+                        </option>
+                        <option value="solid waste"
+                                selected='@(ViewBag.PollutionType == "solid waste")'>
+                            Solid waste
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a asp-action="Search" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Location</th>
+                        <th>Type of pollution</th>
+                        <th>Possible source</th>
+                        <th>Date</th>
+                        <th>Condition</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Location</td>
+                            <td>
+                                <span class="badge bg-warning">@item.PollutionType</span>
+                            </td>
+                            <td>@item.SourceType</td>
+                            <td>@item.ReportDate.ToString("yyyy/MM/dd")</td>
+                            <td>
+                                @if (item.Status == "Pending")
+                                {
+                                    <span class="badge bg-secondary">Under review</span>
+                                }
+                                else if (item.Status == "Confirmed")
+                                {
+                                    <span class="badge bg-danger">certain</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">incorrect</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ReportID"
+                                   class="btn btn-sm btn-primary">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="alert alert-info">
+                Found <strong>@Model.Count()</strong> reports
+            </div>
+        </div>
+    }
+    else if (Model != null && !Model.Any())
+    {
+        <div class="alert alert-warning">
+            No results found. Try different search terms.
+        </div>
+    }
+</div>
